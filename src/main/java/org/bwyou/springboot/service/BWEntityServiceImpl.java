@@ -12,10 +12,10 @@ import java.util.Set;
 import net.kaczmarzyk.spring.data.jpa.domain.Conjunction;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
 
+import org.bwyou.springboot.annotation.Filterable;
+import org.bwyou.springboot.annotation.Updatable;
 import org.bwyou.springboot.dao.BWRepository;
 import org.bwyou.springboot.model.BWModel;
-import org.bwyou.springboot.model.annotation.Filterable;
-import org.bwyou.springboot.model.annotation.Updatable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -58,8 +58,8 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 
 	@Transactional
 	@Override
-	public TEntity ValidAndCreate(TEntity entity, BindingResult result) {
-		if (result.hasErrors()) {
+	public TEntity ValidAndCreate(TEntity entity, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
 			return null;
         }
 		return daoRepository.saveAndFlush(entity);
@@ -67,16 +67,16 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 
 	@Transactional
 	@Override
-	public TEntity ValidAndUpdate(int id, TEntity entity, BindingResult result) {
-		if (result.hasErrors()) {
+	public TEntity ValidAndUpdate(int id, TEntity entity, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
 			return null;
         }
 		if(id != entity.getId()){
-			result.addError(new FieldError("", "Id","mismatch"));
+			bindingResult.addError(new FieldError("", "Id","mismatch"));
             return null;
 		}
 		if(Get(entity.getId()) == null){
-			result.addError(new FieldError("", "Entity","null"));
+			bindingResult.addError(new FieldError("", "Entity","null"));
             return null;
 		}
 		TEntity target = daoRepository.findOne(id);
@@ -87,9 +87,9 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 
 	@Transactional
 	@Override
-	public int ValidAndDelete(int id, BindingResult result) {
+	public int ValidAndDelete(int id, BindingResult bindingResult) {
 		if(Get(id) == null){
-			result.addError(new FieldError("", "Entity","null"));
+			bindingResult.addError(new FieldError("", "Entity","null"));
             return -1;
 		}
 		daoRepository.delete(id);

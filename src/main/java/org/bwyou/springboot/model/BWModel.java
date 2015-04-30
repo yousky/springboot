@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -23,8 +24,10 @@ public abstract class BWModel  implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS")
     @Column(nullable = false, updatable=false)
 	private Date createDT;
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS")
     @Column(nullable = false)
 	private Date updateDT;
 	

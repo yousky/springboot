@@ -1,4 +1,4 @@
-package org.bwyou.springboot.model.annotation;
+package org.bwyou.springboot.annotation;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
