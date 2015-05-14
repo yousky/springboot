@@ -72,6 +72,16 @@ public class BWRestController<TEntity, ID extends Serializable> {
     	throw new BadRequestWebException(bindingResult);
     }
 	
+	protected List<TEntity> BaseValidPost(List<TEntity> entities, BindingResult bindingResult) {
+		List<TEntity> result = entityService.ValidAndCreate(entities, bindingResult);
+    	
+    	if (result != null) {
+			return result;
+		}
+    	
+    	throw new BadRequestWebException(bindingResult);
+    }
+	
 	protected TEntity BaseValidPut(int id, TEntity entity, BindingResult bindingResult) {
 		TEntity result = entityService.ValidAndUpdate(id, entity, bindingResult);
     	

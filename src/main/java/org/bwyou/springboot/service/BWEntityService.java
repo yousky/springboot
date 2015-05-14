@@ -14,6 +14,7 @@ public interface BWEntityService<TEntity> {
     TEntity Get(int id);
     TEntity Get(Specification<TEntity> spec);
     TEntity ValidAndCreate(TEntity entity, BindingResult bindingResult);
+    List<TEntity> ValidAndCreate(List<TEntity> entities, BindingResult bindingResult);
     TEntity ValidAndUpdate(int id, TEntity entity, BindingResult bindingResult);
     int ValidAndDelete(int id, BindingResult bindingResult);
 }

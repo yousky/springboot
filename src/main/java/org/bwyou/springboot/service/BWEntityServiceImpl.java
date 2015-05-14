@@ -67,6 +67,17 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 
 	@Transactional
 	@Override
+	public List<TEntity> ValidAndCreate(List<TEntity> entities, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return null;
+        }
+		List<TEntity> result = daoRepository.save(entities);
+		daoRepository.flush();
+		return result;
+	}
+
+	@Transactional
+	@Override
 	public TEntity ValidAndUpdate(int id, TEntity entity, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return null;
