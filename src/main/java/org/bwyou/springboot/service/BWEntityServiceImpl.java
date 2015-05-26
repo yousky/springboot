@@ -83,11 +83,11 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 			return null;
         }
 		if(id != entity.getId()){
-			bindingResult.addError(new FieldError("", "Id","mismatch"));
+			bindingResult.addError(new FieldError(bindingResult.getObjectName(), "id","mismatch"));
             return null;
 		}
 		if(Get(entity.getId()) == null){
-			bindingResult.addError(new FieldError("", "Entity","null"));
+			bindingResult.addError(new FieldError(bindingResult.getObjectName(), "id","Entity null"));
             return null;
 		}
 		TEntity target = daoRepository.findOne(id);
@@ -100,7 +100,7 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 	@Override
 	public int ValidAndDelete(int id, BindingResult bindingResult) {
 		if(Get(id) == null){
-			bindingResult.addError(new FieldError("", "Entity","null"));
+			bindingResult.addError(new FieldError(bindingResult.getObjectName(), "id","Entity null"));
             return -1;
 		}
 		daoRepository.delete(id);

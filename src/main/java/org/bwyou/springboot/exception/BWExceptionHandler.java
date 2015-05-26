@@ -48,7 +48,7 @@ public class BWExceptionHandler {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("url", request.getRequestURI());
 		mv.addObject("exception", ex);
-		mv.setViewName("/errors/common");
+		mv.setViewName("/errors/common");	//TODO /errors/common 이 부분을 외부로 뺄 수 있는 방안 고려 필요
 		
         return mv;
 	}
