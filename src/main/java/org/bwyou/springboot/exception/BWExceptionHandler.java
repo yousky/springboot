@@ -43,7 +43,7 @@ public class BWExceptionHandler {
 	}
 	protected ModelAndView returnMV4WebException(HttpServletRequest request, HttpServletResponse response, Locale locale, WebException ex) {
 		
-		response.setStatus(ex.getBody().getStatus());
+		//response.setStatus(ex.getBody().getStatus()); 쓰면 안 됨~
 
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("url", request.getRequestURI());

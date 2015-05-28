@@ -1,5 +1,6 @@
 package org.bwyou.springboot.service;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,8 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.ReflectionUtils.FieldCallback;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -82,15 +85,16 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 		if (bindingResult.hasErrors()) {
 			return null;
         }
-		if(id != entity.getId()){
-			bindingResult.addError(new FieldError(bindingResult.getObjectName(), "id","mismatch"));
-            return null;
-		}
-		if(Get(entity.getId()) == null){
-			bindingResult.addError(new FieldError(bindingResult.getObjectName(), "id","Entity null"));
+		if(entity.getId() != null && id != entity.getId()){
+			bindingResult.addError(new FieldError(bindingResult.getObjectName(), "id","mismatch"));	//TODO 메세지 다국어 처리
             return null;
 		}
 		TEntity target = daoRepository.findOne(id);
+		if(target == null){
+			bindingResult.addError(new FieldError(bindingResult.getObjectName(), "id","Entity null"));	//TODO 메세지 다국어 처리
+            return null;
+		}
+		
 		copyNonNullAndUpdatableProperties(entity, target);
 		target.setUpdateDT(new Date());
 		return daoRepository.saveAndFlush(target);
@@ -100,7 +104,7 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 	@Override
 	public int ValidAndDelete(int id, BindingResult bindingResult) {
 		if(Get(id) == null){
-			bindingResult.addError(new FieldError(bindingResult.getObjectName(), "id","Entity null"));
+			bindingResult.addError(new FieldError(bindingResult.getObjectName(), "id","Entity null"));	//TODO 메세지 다국어 처리
             return -1;
 		}
 		daoRepository.delete(id);
@@ -118,20 +122,26 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 	 * @return
 	 */
 	public String[] getNullOrNotUpdatablePropertyNames (Object source) {
+		
 	    final BeanWrapper src = new BeanWrapperImpl(source);
-	    java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
 
 	    Set<String> emptyNames = new HashSet<String>();
-	    for(java.beans.PropertyDescriptor pd : pds) {
-	    	if (pd.getReadMethod().getAnnotation(Updatable.class) == null) {
-	    		emptyNames.add(pd.getName());
-	    	} else {
-		        Object srcValue = src.getPropertyValue(pd.getName());
-		        if (srcValue == null) {
-		        	emptyNames.add(pd.getName());
-		        }
-	    	}
-	    }
+	    
+		ReflectionUtils.doWithFields(source.getClass(), new FieldCallback() {
+			@Override
+			public void doWith(Field field) throws IllegalAccessException {
+				ReflectionUtils.makeAccessible(field);
+				if (field.getAnnotation(Updatable.class) == null) {
+					emptyNames.add(field.getName());
+				} else {
+			        Object srcValue = src.getPropertyValue(field.getName());
+			        if (srcValue == null) {
+			        	emptyNames.add(field.getName());
+			        }
+		    	}
+			}
+		});
+
 	    String[] result = new String[emptyNames.size()];
 	    return emptyNames.toArray(result);
 	}

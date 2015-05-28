@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import org.bwyou.springboot.annotation.Updatable;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,6 +31,7 @@ public abstract class BWModel  implements Serializable{
 	private Date createDT;
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     @Column(nullable = false)
+	@Updatable
 	private Date updateDT;
 	
     @JsonProperty
