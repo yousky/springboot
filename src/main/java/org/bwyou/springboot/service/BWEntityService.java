@@ -2,14 +2,17 @@ package org.bwyou.springboot.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.validation.BindingResult;
 
 public interface BWEntityService<TEntity> {
 	List<TEntity> GetList();
-//	List<Page<TEntity>> GetList(String sort, int pageNumber, int pageSize);
-	List<TEntity> GetList(Specification<TEntity> spec);
-//	List<Page<TEntity>> GetFilteredList(TEntity entity, String sort, int pageNumber, int pageSize);
+	List<TEntity> GetList(String sort);
+	Page<TEntity> GetList(String sort, int pageNumber, int pageSize);
+	List<TEntity> GetFilteredList(Specification<TEntity> spec);
+	List<TEntity> GetFilteredList(Specification<TEntity> spec, String sort);
+	Page<TEntity> GetFilteredList(Specification<TEntity> spec, String sort, int pageNumber, int pageSize);
 	
     TEntity Get(int id);
     TEntity Get(Specification<TEntity> spec);

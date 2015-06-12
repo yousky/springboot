@@ -1,6 +1,5 @@
 package org.bwyou.springboot.service;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +19,12 @@ import org.bwyou.springboot.model.BWModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
@@ -43,8 +48,33 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 
 	@Transactional
 	@Override
-	public List<TEntity> GetList(Specification<TEntity> spec) {
+	public List<TEntity> GetList(String sort) {
+		return daoRepository.findAll(GetOrderClause(sort));
+	}
+
+	@Transactional
+	@Override
+	public Page<TEntity> GetList(String sort, int pageNumber, int pageSize) {
+		Pageable pageSpecification = new PageRequest(pageNumber-1, pageSize, GetOrderClause(sort));
+		return daoRepository.findAll(pageSpecification);
+	}
+
+	@Transactional
+	@Override
+	public List<TEntity> GetFilteredList(Specification<TEntity> spec) {
 		return daoRepository.findAll(spec);
+	}
+
+	@Override
+	public List<TEntity> GetFilteredList(Specification<TEntity> spec, String sort) {
+		return daoRepository.findAll(spec, GetOrderClause(sort));
+	}
+
+	@Transactional
+	@Override
+	public Page<TEntity> GetFilteredList(Specification<TEntity> spec, String sort, int pageNumber, int pageSize) {
+		Pageable pageSpecification = new PageRequest(pageNumber-1, pageSize, GetOrderClause(sort));
+		return daoRepository.findAll(spec, pageSpecification);
 	}
 
 	@Transactional
@@ -170,6 +200,29 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 		}
 		
 	    return new Conjunction<>(innerSpecs);
+		
+	}
+	
+	protected Sort GetOrderClause(String sort){
+		String[] sortInfoArray = sort.split(",");
+
+		List<Order> orders = new ArrayList<>();
+        for (String sortInfo : sortInfoArray)
+        {
+        	String sortProp = sortInfo;
+        	boolean bDesc = false;
+            if (sortInfo.startsWith("-") == true)
+            {
+                bDesc = true;
+                sortProp = sortInfo.substring(1);
+            }
+
+            Order order = bDesc == false ? new Order(Direction.ASC, sortProp) : new Order(Direction.DESC, sortProp);
+            
+            orders.add(order);
+        }
+
+        return new Sort(orders);
 		
 	}
 	

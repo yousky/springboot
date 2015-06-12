@@ -6,6 +6,8 @@ import java.util.List;
 import org.bwyou.springboot.exception.BadRequestWebException;
 import org.bwyou.springboot.exception.NotFoundWebException;
 import org.bwyou.springboot.service.BWEntityService;
+import org.bwyou.springboot.viewmodel.PageResultViewModel;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.validation.BindingResult;
 
@@ -32,11 +34,53 @@ public class BWRestController<TEntity, ID extends Serializable> {
     	
     }
 	
-	protected List<TEntity> BaseGetList(Specification<TEntity> spec) {
-		List<TEntity> result = entityService.GetList(spec);
+	protected List<TEntity> BaseGetList(String sort) {
+    	List<TEntity> result = entityService.GetList(sort);
     	
     	if (result != null) {
 			return result;
+		}
+    	
+    	throw new NotFoundWebException();
+    	
+    }
+	
+	protected PageResultViewModel<TEntity> BaseGetList(String sort, int pageNumber, int pageSize) {
+    	Page<TEntity> result = entityService.GetList(sort, pageNumber, pageSize);
+    	
+    	if (result != null) {
+			return new PageResultViewModel<TEntity>(result);
+		}
+    	
+    	throw new NotFoundWebException();
+    	
+    }
+	
+	protected List<TEntity> BaseGetFilteredList(Specification<TEntity> spec) {
+		List<TEntity> result = entityService.GetFilteredList(spec);
+    	
+    	if (result != null) {
+			return result;
+		}
+    	
+    	throw new NotFoundWebException();
+    }
+	
+	protected List<TEntity> BaseGetFilteredList(Specification<TEntity> spec, String sort) {
+		List<TEntity> result = entityService.GetFilteredList(spec, sort);
+    	
+    	if (result != null) {
+			return result;
+		}
+    	
+    	throw new NotFoundWebException();
+    }
+	
+	protected PageResultViewModel<TEntity> BaseGetFilteredList(Specification<TEntity> spec, String sort, int pageNumber, int pageSize) {
+		Page<TEntity> result = entityService.GetFilteredList(spec, sort, pageNumber, pageSize);
+    	
+    	if (result != null) {
+    		return new PageResultViewModel<TEntity>(result);
 		}
     	
     	throw new NotFoundWebException();
