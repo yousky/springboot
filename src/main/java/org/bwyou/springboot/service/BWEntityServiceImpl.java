@@ -133,6 +133,9 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 	@Transactional
 	@Override
 	public int ValidAndDelete(int id, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return -1;
+        }
 		if(Get(id) == null){
 			bindingResult.addError(new FieldError(bindingResult.getObjectName(), "id","Entity null"));	//TODO 메세지 다국어 처리
             return -1;

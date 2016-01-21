@@ -5,7 +5,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.bwyou.springboot.viewmodel.ErrorResultViewModel;
+import org.bwyou.springboot.model.viewmodel.ErrorResultViewModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

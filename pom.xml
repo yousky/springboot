@@ -5,7 +5,7 @@
 
 	<groupId>org.bwyou</groupId>
 	<artifactId>springboot</artifactId>
-	<version>0.5.0</version>
+	<version>0.6.0</version>
 	<packaging>jar</packaging>
 
 	<name>springboot</name>
@@ -104,6 +104,6 @@
 			<artifactId>specification-arg-resolver</artifactId>
 			<version>0.6.0</version>
 		</dependency>
-		
+
 	</dependencies>
 </project>

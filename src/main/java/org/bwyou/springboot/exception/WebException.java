@@ -5,7 +5,7 @@ import java.io.StringWriter;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.bwyou.springboot.viewmodel.WebStatusMessageBody;
+import org.bwyou.springboot.model.viewmodel.WebStatusMessageBody;
 
 public class WebException extends RuntimeException {
 

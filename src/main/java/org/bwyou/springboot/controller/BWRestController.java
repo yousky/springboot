@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.bwyou.springboot.exception.BadRequestWebException;
 import org.bwyou.springboot.exception.NotFoundWebException;
+import org.bwyou.springboot.model.viewmodel.PageResultViewModel;
 import org.bwyou.springboot.service.BWEntityService;
-import org.bwyou.springboot.viewmodel.PageResultViewModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.validation.BindingResult;

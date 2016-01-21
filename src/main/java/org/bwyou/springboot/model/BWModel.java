@@ -19,7 +19,7 @@ import lombok.Data;
 
 @Data
 @MappedSuperclass
-public abstract class BWModel  implements Serializable{
+public abstract class BWModel implements Serializable{
 
 	private static final long serialVersionUID = -8777196809521557362L;
 	

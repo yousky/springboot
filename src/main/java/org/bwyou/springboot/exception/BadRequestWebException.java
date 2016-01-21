@@ -2,7 +2,7 @@ package org.bwyou.springboot.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.bwyou.springboot.viewmodel.WebStatusMessageBody;
+import org.bwyou.springboot.model.viewmodel.WebStatusMessageBody;
 
 public class BadRequestWebException extends WebException {
 

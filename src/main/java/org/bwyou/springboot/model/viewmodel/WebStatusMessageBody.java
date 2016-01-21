@@ -1,4 +1,4 @@
-package org.bwyou.springboot.viewmodel;
+package org.bwyou.springboot.model.viewmodel;
 
 import lombok.Getter;
 
