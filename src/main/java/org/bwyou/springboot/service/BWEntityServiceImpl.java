@@ -16,6 +16,7 @@ import org.bwyou.springboot.annotation.Filterable;
 import org.bwyou.springboot.annotation.Updatable;
 import org.bwyou.springboot.dao.BWRepository;
 import org.bwyou.springboot.model.BWModel;
+import org.bwyou.springboot.model.bindingmodel.BWCursorBindingModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -26,6 +27,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.ReflectionUtils.FieldCallback;
@@ -61,6 +63,14 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 
 	@Transactional
 	@Override
+	public Page<TEntity> GetList(BWCursorBindingModel cursorBM) throws Exception {
+		Pageable pageSpecification = new PageRequest(0, cursorBM.getLimit(), GetOrderClause(cursorBM.getSort()));
+		Specification<TEntity> spec = cursorBM.<TEntity>GetSpecification();
+		return daoRepository.findAll(spec, pageSpecification);
+	}
+
+	@Transactional
+	@Override
 	public List<TEntity> GetFilteredList(Specification<TEntity> spec) {
 		return daoRepository.findAll(spec);
 	}
@@ -74,6 +84,14 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 	@Override
 	public Page<TEntity> GetFilteredList(Specification<TEntity> spec, String sort, int pageNumber, int pageSize) {
 		Pageable pageSpecification = new PageRequest(pageNumber-1, pageSize, GetOrderClause(sort));
+		return daoRepository.findAll(spec, pageSpecification);
+	}
+
+	@Transactional
+	@Override
+	public Page<TEntity> GetFilteredList(Specification<TEntity> spec, BWCursorBindingModel cursorBM) throws Exception {
+		Pageable pageSpecification = new PageRequest(0, cursorBM.getLimit(), GetOrderClause(cursorBM.getSort()));
+		spec = Specifications.where(spec).and(cursorBM.<TEntity>GetSpecification());
 		return daoRepository.findAll(spec, pageSpecification);
 	}
 
