@@ -30,7 +30,7 @@ public class Before<T, C extends Comparable<? super C>> extends PathSpecificatio
             throw new IllegalArgumentException("expected a single http-param, but was: " + args);
         }
         String str = args[0];
-        this.value = (C) converter.convert(str, value.getClass());
+        this.value = (C) str;
     }
 
     @Override
