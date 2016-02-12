@@ -10,10 +10,10 @@ public class CursorResultViewModel<T> {
 	Iterable<T> result;
 	CursorMetaData metaData;
 
-	public CursorResultViewModel(Iterable<T> result, String cursorProp, int limit)
+	public CursorResultViewModel(Iterable<T> result, String cursorProp, int limit, long totalItemCount)
     {
         this.result = result;
-        this.metaData = new CursorMetaData(result, cursorProp, limit);
+        this.metaData = new CursorMetaData(result, cursorProp, limit, totalItemCount);
     }
 
 	public CursorResultViewModel(Page<T> result, String cursorProp)
@@ -21,11 +21,15 @@ public class CursorResultViewModel<T> {
         this.result = result;
         this.metaData = new CursorMetaData(result, cursorProp);
     }
-	
-	public CursorResultViewModel(Iterable<T> result, LimitSortBindingModel lsBM)
+
+	public CursorResultViewModel(Page<T> result, LimitSortBindingModel lsBM)
     {
-        this.result = result;
-        this.metaData = new CursorMetaData(result, lsBM);
+		this(result, lsBM.getSort());
+    }
+	
+	public CursorResultViewModel(Iterable<T> result, LimitSortBindingModel lsBM, long totalItemCount)
+    {
+		this(result, lsBM.getSort(), lsBM.getLimit(), totalItemCount);
     }
 	
 	public CursorResultViewModel(Iterable<T> result, CursorMetaData metaData)

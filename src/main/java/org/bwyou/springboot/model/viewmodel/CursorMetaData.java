@@ -20,20 +20,20 @@ public class CursorMetaData {
 	private long totalItemCount;
 	private int limit;
 	private boolean isDescending;
+	private boolean isRemaining;
 	
 	@SuppressWarnings("rawtypes")
-	public CursorMetaData(Iterable result, LimitSortBindingModel lsBM) {
-		this(result, lsBM.getSort(), lsBM.getLimit());
+	public CursorMetaData(Iterable result, LimitSortBindingModel lsBM, long totalItemCount) {
+		this(result, lsBM.getSort(), lsBM.getLimit(), totalItemCount);
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public CursorMetaData(Page result, String cursorProp) {
-		this((Iterable)result, cursorProp, result.getSize());
-		totalItemCount = result.getTotalElements();
+		this((Iterable)result, cursorProp, result.getSize(), result.getTotalElements());
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public CursorMetaData(Iterable result, String cursorProp, int limit) {
+	public CursorMetaData(Iterable result, String cursorProp, int limit, long totalItemCount) {
 		this.isDescending = false;
         if (cursorProp.startsWith("-") == true)
         {
@@ -56,8 +56,9 @@ public class CursorMetaData {
 			}
 		}
 		
-		this.totalItemCount = list.size();
+		this.totalItemCount = totalItemCount;
 		this.limit = limit;
+		this.isRemaining = totalItemCount > list.size();
 	}
 	
 	private Object getPropertyValue (Object source, String propertyName) {
