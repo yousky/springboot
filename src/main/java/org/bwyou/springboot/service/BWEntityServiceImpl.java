@@ -17,6 +17,7 @@ import org.bwyou.springboot.annotation.Updatable;
 import org.bwyou.springboot.dao.BWRepository;
 import org.bwyou.springboot.model.BWModel;
 import org.bwyou.springboot.model.bindingmodel.BWCursorBindingModel;
+import org.bwyou.springboot.model.bindingmodel.PageBindingModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -63,6 +64,12 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 
 	@Transactional
 	@Override
+	public Page<TEntity> GetList(PageBindingModel pageBM) {
+		return GetList(pageBM.getSort(), pageBM.getPageNumber() == null? 0:pageBM.getPageNumber() - 1, pageBM.getLimit());
+	}
+
+	@Transactional
+	@Override
 	public Page<TEntity> GetList(BWCursorBindingModel cursorBM) throws Exception {
 		Pageable pageSpecification = new PageRequest(0, cursorBM.getLimit(), GetOrderClause(cursorBM.getSort()));
 		Specification<TEntity> spec = cursorBM.<TEntity>GetSpecification();
@@ -85,6 +92,12 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 	public Page<TEntity> GetFilteredList(Specification<TEntity> spec, String sort, int pageNumber, int pageSize) {
 		Pageable pageSpecification = new PageRequest(pageNumber-1, pageSize, GetOrderClause(sort));
 		return daoRepository.findAll(spec, pageSpecification);
+	}
+
+	@Transactional
+	@Override
+	public Page<TEntity> GetFilteredList(Specification<TEntity> spec, PageBindingModel pageBM) {
+		return GetFilteredList(spec, pageBM.getSort(), pageBM.getPageNumber() == null? 0:pageBM.getPageNumber(), pageBM.getLimit());
 	}
 
 	@Transactional
