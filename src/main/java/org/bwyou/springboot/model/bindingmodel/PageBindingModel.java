@@ -6,5 +6,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class PageBindingModel extends LimitSortBindingModel {
-	protected Integer pageNumber = 1;	//1부터 시작
+	protected Integer page = 1;	//1부터 시작
 }

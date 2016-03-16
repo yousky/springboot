@@ -65,7 +65,7 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 	@Transactional
 	@Override
 	public Page<TEntity> GetList(PageBindingModel pageBM) {
-		return GetList(pageBM.getSort(), pageBM.getPageNumber() == null? 0:pageBM.getPageNumber() - 1, pageBM.getLimit());
+		return GetList(pageBM.getSort(), pageBM.getPage() == null? 0:pageBM.getPage(), pageBM.getLimit());
 	}
 
 	@Transactional
@@ -97,7 +97,7 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 	@Transactional
 	@Override
 	public Page<TEntity> GetFilteredList(Specification<TEntity> spec, PageBindingModel pageBM) {
-		return GetFilteredList(spec, pageBM.getSort(), pageBM.getPageNumber() == null? 0:pageBM.getPageNumber(), pageBM.getLimit());
+		return GetFilteredList(spec, pageBM.getSort(), pageBM.getPage() == null? 0:pageBM.getPage(), pageBM.getLimit());
 	}
 
 	@Transactional
