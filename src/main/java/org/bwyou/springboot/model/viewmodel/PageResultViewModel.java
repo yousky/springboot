@@ -22,7 +22,7 @@ public class PageResultViewModel<T> {
 	
 	public PageResultViewModel(Page<T> result)
     {
-        this.result = result;
+        this.result = result.getContent();
         this.metaData = new MetaData(result);
     }
 }

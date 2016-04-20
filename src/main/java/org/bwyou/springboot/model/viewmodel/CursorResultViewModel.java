@@ -18,7 +18,7 @@ public class CursorResultViewModel<T> {
 
 	public CursorResultViewModel(Page<T> result, String cursorProp)
     {
-        this.result = result;
+        this.result = result.getContent();
         this.metaData = new CursorMetaData(result, cursorProp);
     }
 
