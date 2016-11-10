@@ -143,6 +143,12 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 	@Transactional
 	@Override
 	public TEntity ValidAndUpdate(int id, TEntity entity, BindingResult bindingResult) {
+		return ValidAndUpdate(id, entity, null, bindingResult);
+	}
+
+	@Transactional
+	@Override
+	public TEntity ValidAndUpdate(int id, TEntity entity, ArrayList<String> nullUpdatableFields, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return null;
         }
@@ -156,7 +162,7 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
             return null;
 		}
 		
-		copyNonNullAndUpdatableProperties(entity, target);
+		copyNonNullAndUpdatableProperties(entity, target, nullUpdatableFields);
 		target.setUpdateDT(new Date());
 		return daoRepository.saveAndFlush(target);
 	}
@@ -176,8 +182,8 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 		return 1;
 	}
 	
-	public void copyNonNullAndUpdatableProperties(Object src, Object target) {
-	    BeanUtils.copyProperties(src, target, getNullOrNotUpdatablePropertyNames(src));
+	public void copyNonNullAndUpdatableProperties(Object src, Object target, ArrayList<String> nullUpdatableFields) {
+	    BeanUtils.copyProperties(src, target, getNullOrNotUpdatablePropertyNames(src, nullUpdatableFields));
 	}
 	
 	/**
@@ -185,7 +191,7 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 	 * @param source
 	 * @return
 	 */
-	public String[] getNullOrNotUpdatablePropertyNames (Object source) {
+	public String[] getNullOrNotUpdatablePropertyNames (Object source, ArrayList<String> nullUpdatableFields) {
 		
 	    final BeanWrapper src = new BeanWrapperImpl(source);
 
@@ -200,7 +206,9 @@ public class BWEntityServiceImpl<TEntity extends BWModel> implements BWEntitySer
 				} else {
 			        Object srcValue = src.getPropertyValue(field.getName());
 			        if (srcValue == null) {
-			        	emptyNames.add(field.getName());
+			        	if(nullUpdatableFields == null || nullUpdatableFields.contains(field.getName()) == false){
+			        		emptyNames.add(field.getName());
+			        	}
 			        }
 		    	}
 			}

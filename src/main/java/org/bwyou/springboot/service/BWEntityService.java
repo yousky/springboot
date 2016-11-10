@@ -1,5 +1,6 @@
 package org.bwyou.springboot.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bwyou.springboot.model.bindingmodel.BWCursorBindingModel;
@@ -25,5 +26,6 @@ public interface BWEntityService<TEntity> {
     TEntity ValidAndCreate(TEntity entity, BindingResult bindingResult);
     List<TEntity> ValidAndCreate(List<TEntity> entities, BindingResult bindingResult);
     TEntity ValidAndUpdate(int id, TEntity entity, BindingResult bindingResult);
+    TEntity ValidAndUpdate(int id, TEntity entity, ArrayList<String> nullUpdatableFields, BindingResult bindingResult);
     int ValidAndDelete(int id, BindingResult bindingResult);
 }

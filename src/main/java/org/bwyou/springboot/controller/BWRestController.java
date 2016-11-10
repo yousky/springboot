@@ -1,6 +1,7 @@
 package org.bwyou.springboot.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bwyou.springboot.exception.BadRequestWebException;
@@ -127,7 +128,17 @@ public class BWRestController<TEntity, ID extends Serializable> {
     }
 	
 	protected TEntity BaseValidPut(int id, TEntity entity, BindingResult bindingResult) {
-		TEntity result = entityService.ValidAndUpdate(id, entity, bindingResult);
+		TEntity result = entityService.ValidAndUpdate(id, entity, null, bindingResult);
+    	
+    	if (result != null) {
+			return result;
+		}
+    	
+    	throw new BadRequestWebException(bindingResult);
+    }
+	
+	protected TEntity BaseValidPut(int id, TEntity entity, ArrayList<String> nullUpdatableFields, BindingResult bindingResult) {
+		TEntity result = entityService.ValidAndUpdate(id, entity, nullUpdatableFields, bindingResult);
     	
     	if (result != null) {
 			return result;
